@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icam Revision Hub - Ultimate Fix (Iframe Version)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* Quiz Styles */
+        .option { transition: all 0.2s; border: 2px solid #e2e8f0; }
+        .option:hover { background-color: #f1f5f9; border-color: #94a3b8; }
+        .option.selected { border-color: #3b82f6; background-color: #eff6ff; }
+        .option.correct { border-color: #22c55e; background-color: #f0fdf4; color: #166534; }
+        .option.wrong { border-color: #ef4444; background-color: #fef2f2; opacity: 0.6; }
+        
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* PDF STYLES */
+        .pdf-wrapper { width: 100%; height: 100%; background-color: #525659; display: block; }
+        iframe { width: 100%; height: 100%; display: block; border: none; }
+    </style>
+</head>
+<body class="h-screen overflow-hidden text-slate-800 bg-white">
+
+    <div id="dashboard-view" class="absolute inset-0 z-50 bg-slate-50 flex flex-col overflow-y-auto">
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-graduation-cap text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-slate-900">Icam Revision Hub</h1>
+                </div>
+            </div>
+        </header>
+        <main class="max-w-7xl mx-auto px-6 py-10 w-full">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Examens</h2>
+            <div id="exams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </main>
+    </div>
+
+    <div id="quiz-view" class="h-full flex w-full hidden">
+        
+        <div class="w-full md:w-5/12 bg-white flex flex-col border-r border-slate-200 shadow-xl z-20">
+            <div class="h-16 border-b border-slate-100 flex items-center justify-between px-6 bg-white">
+                <button onclick="closeQuiz()" class="text-slate-500 hover:text-slate-800 font-medium text-sm flex items-center gap-2"><i class="fas fa-arrow-left"></i> Menu</button>
+                <div class="text-xs font-bold uppercase tracking-wider text-blue-600" id="quiz-title-display">Module</div>
+                <div class="font-mono font-bold text-slate-800" id="score-display">0/0</div>
+            </div>
+            
+            <div id="question-area" class="flex-1 overflow-y-auto p-6 relative">
+                <div id="q-content" class="hidden fade-in">
+                    <div class="mb-6">
+                        <span id="q-cat" class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded uppercase">Catégorie</span>
+                        <h2 id="q-text" class="text-lg font-bold text-slate-900 mt-2 leading-snug">Question ?</h2>
+                    </div>
+                    <div id="q-options" class="space-y-3"></div>
+                    
+                    <div id="q-explanation" class="hidden mt-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl shadow-sm">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-emerald-600 mt-1"></i>
+                            <div class="text-sm w-full">
+                                <span class="font-bold text-emerald-800 block mb-1">Explication</span>
+                                <p id="q-exp-text" class="text-emerald-900 mb-3"></p>
+                                <button onclick="forceReloadPdf()" class="bg-white text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-100 transition flex items-center gap-2">
+                                    <i class="fas fa-sync-alt"></i> Recharger PDF Page <span id="q-page-num"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-slate-100 bg-slate-50">
+                <button id="btn-validate" onclick="checkAnswer()" class="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl hover:bg-slate-800 transition disabled:opacity-50" disabled>Valider</button>
+                <button id="btn-next" onclick="nextQuestion()" class="hidden w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-200">Question Suivante <i class="fas fa-arrow-right ml-2"></i></button>
+            </div>
+        </div>
+        
+        <div class="hidden md:flex flex-1 bg-slate-800 flex-col h-full relative">
+            <div class="h-10 bg-slate-900 flex items-center justify-between px-4 text-slate-400 text-xs border-b border-slate-700">
+                <span id="pdf-name-display"><i class="fas fa-file-pdf mr-2"></i>Support de cours</span>
+                <a id="direct-pdf-link" href="#" target="_blank" class="hover:text-white underline">Ouvrir dans un nouvel onglet</a>
+            </div>
+            
+            <div class="flex-1 relative w-full bg-gray-600 pdf-wrapper">
+                
+                <iframe id="pdf-frame" src="" class="w-full h-full border-none">
+                    <div class="flex flex-col items-center justify-center h-full text-white p-10 text-center">
+                         <p>Votre navigateur ne supporte pas les iframes.</p>
+                    </div>
+                </iframe>
+                <div id="pdf-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 text-slate-400 z-10">
+                    <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4"><i class="fas fa-book-open text-2xl"></i></div>
+                    <p class="font-medium text-slate-600">Le cours s'affichera ici</p>
+                    <p class="text-sm mt-1">Valide une réponse pour synchroniser la page.</p>
+                    <div class="mt-4 text-xs font-mono bg-slate-200 p-2 rounded text-slate-500" id="debug-path">Prêt</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="end-screen" class="hidden fixed inset-0 z-[60] bg-white/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl text-center border border-slate-100">
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Terminé !</h2>
+            <div class="text-5xl font-black text-slate-900 mb-8" id="final-score-val">0%</div>
+            <button onclick="closeQuiz()" class="w-full bg-white text-slate-600 font-bold py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition">Retour</button>
+        </div>
+    </div>
+
+<script>
+    // --- DONNÉES ---
+    const INTERNAL_MANIFEST = [
+        {
+            id: "indus_2024_ds",
+            subject: "Industrialisation",
+            code: "EC07",
+            type: "DS",
+            year: 2024,
+            title: "Examen Final 2024",
+            description: "Test complet (Process, Elec, Finance, Env) avec liens PDF.",
+            resources: {
+                "cours": "pdfs/EC07-Cours.pdf",
+                "env": "pdfs/EC07-Env.pdf"
+            }
+        }
+    ];
+
+    const INTERNAL_DATA = {
+        "indus_2024_ds": [
+            {
+                "id": 1, "category": "Général", "question": "1. Traceability is costing huge amount of money...", 
+                "options": ["True", "False"], "correct": [0], 
+                "explanation": "La traçabilité coûte cher (matériel, logiciel, stockage).", 
+                "ref": "cours", "page": 85
+            },
+            {
+                "id": 69, "category": "Environnement", "question": "69. Which standard applies to Environmental Product Declaration?", 
+                "options": ["ISO 14027", "ISO 14021", "ISO 14025"], "correct": [2], 
+                "explanation": "La norme ISO 14025 régit les EPD.", 
+                "ref": "env", "page": 34
+            }
+        ]
+    };
+
+    // --- VARIABLES ---
+    let currentQuiz = [], currentIdx = 0, score = 0, selected = [];
+    let currentPdfPath = "", currentPageRef = 1;
+    let activeQuizData = null;
+
+    // --- INIT ---
+    document.addEventListener('DOMContentLoaded', () => {
+        renderDashboard(INTERNAL_MANIFEST);
+    });
+
+    function renderDashboard(data) {
+        const grid = document.getElementById('exams-grid');
+        grid.innerHTML = "";
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col h-full";
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-bold px-2 py-1 rounded-md uppercase">${item.subject}</span>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">${item.year}</span>
+                </div>
+                <h3 class="font-bold text-lg text-slate-800 mb-2 leading-tight">${item.title}</h3>
+                <button onclick="startQuiz('${item.id}')" class="w-full bg-slate-900 text-white font-bold text-sm py-3 rounded-xl hover:bg-blue-600 transition mt-auto">Lancer</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // --- QUIZ ---
+    function startQuiz(id) {
+        const config = INTERNAL_MANIFEST.find(i => i.id === id);
+        if(!config) return;
+        activeQuizData = config;
+        currentQuiz = INTERNAL_DATA[id];
+
+        document.getElementById('dashboard-view').classList.add('hidden');
+        document.getElementById('quiz-view').classList.remove('hidden');
+        document.getElementById('quiz-title-display').innerText = config.title;
+        
+        // Initialisation PDF par défaut
+        if (config.resources) {
+            const keys = Object.keys(config.resources);
+            if(keys.length > 0) currentPdfPath = config.resources[keys[0]];
+        }
+        
+        // Reset Visuals
+        document.getElementById('pdf-placeholder').classList.remove('hidden');
+        // On vide l'iframe au démarrage
+        document.getElementById('pdf-frame').src = "";
+        
+        currentIdx = 0; score = 0; updateScore(); loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = currentQuiz[currentIdx];
+        document.getElementById('q-content').classList.remove('hidden');
+        document.getElementById('q-explanation').classList.add('hidden');
+        document.getElementById('btn-validate').classList.remove('hidden');
+        document.getElementById('btn-validate').disabled = true;
+        document.getElementById('btn-next').classList.add('hidden');
+        document.getElementById('q-cat').innerText = q.category;
+        document.getElementById('q-text').innerText = q.question;
+        
+        const optContainer = document.getElementById('q-options');
+        optContainer.innerHTML = '';
+        selected = [];
+        
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            div.className = "option p-4 rounded-xl border-2 border-slate-100 cursor-pointer hover:bg-slate-50 hover:border-slate-300 transition flex items-center gap-3";
+            div.innerHTML = `<div class="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center dot"><div class="w-2.5 h-2.5 bg-blue-600 rounded-full hidden"></div></div><span class="text-sm font-medium text-slate-700">${opt}</span>`;
+            div.onclick = () => selectOption(i, div, q.correct.length > 1);
+            optContainer.appendChild(div);
+        });
+    }
+
+    function selectOption(idx, el, isMulti) {
+        if(!document.getElementById('q-explanation').classList.contains('hidden')) return;
+        const dot = el.querySelector('.dot div');
+        const circle = el.querySelector('.dot');
+        
+        if(!isMulti) {
+            selected = [idx];
+            document.querySelectorAll('.option').forEach(o => {
+                o.classList.remove('border-blue-500', 'bg-blue-50');
+                o.querySelector('.dot div').classList.add('hidden');
+                o.querySelector('.dot').classList.remove('border-blue-500');
+            });
+            el.classList.add('border-blue-500', 'bg-blue-50');
+            circle.classList.add('border-blue-500');
+            dot.classList.remove('hidden');
+        } else {
+             if(selected.includes(idx)) {
+                selected = selected.filter(i => i !== idx);
+                el.classList.remove('border-blue-500', 'bg-blue-50');
+                circle.classList.remove('border-blue-500');
+                dot.classList.add('hidden');
+            } else {
+                selected.push(idx);
+                el.classList.add('border-blue-500', 'bg-blue-50');
+                circle.classList.add('border-blue-500');
+                dot.classList.remove('hidden');
+            }
+        }
+        document.getElementById('btn-validate').disabled = selected.length === 0;
+    }
+
+    function checkAnswer() {
+        const q = currentQuiz[currentIdx];
+        const opts = document.querySelectorAll('.option');
+        let isCorrect = true;
+        if(selected.length !== q.correct.length) isCorrect = false;
+        q.correct.forEach(c => { if(!selected.includes(c)) isCorrect = false; });
+        selected.forEach(s => { if(!q.correct.includes(s)) isCorrect = false; });
+
+        opts.forEach((el, i) => {
+            el.classList.remove('hover:bg-slate-50', 'cursor-pointer');
+            if(q.correct.includes(i)) {
+                el.classList.add('bg-green-50', 'border-green-500', 'text-green-800');
+                el.innerHTML += `<i class="fas fa-check text-green-600 ml-auto"></i>`;
+            } else if(selected.includes(i)) {
+                el.classList.add('bg-red-50', 'border-red-500', 'text-red-800');
+                el.innerHTML += `<i class="fas fa-times text-red-500 ml-auto"></i>`;
+            }
+        });
+
+        if(isCorrect) score++;
+        updateScore();
+
+        document.getElementById('q-exp-text').innerHTML = q.explanation;
+        
+        // --- LOGIQUE PDF AVANCÉE (IFRAME) ---
+        const refKey = q.ref;
+        let sourceFile = (refKey && activeQuizData.resources) ? activeQuizData.resources[refKey] : currentPdfPath;
+        if (!sourceFile) sourceFile = currentPdfPath;
+
+        currentPageRef = q.page || 1;
+        document.getElementById('q-page-num').innerText = currentPageRef;
+        document.getElementById('pdf-name-display').innerHTML = `<i class="fas fa-file-pdf mr-2"></i> ${sourceFile.split('/').pop()}`;
+        
+        // Liens de secours
+        document.getElementById('direct-pdf-link').href = sourceFile;
+        document.getElementById('debug-path').innerText = "Source : " + sourceFile;
+
+        jumpToPdf(sourceFile, currentPageRef);
+
+        document.getElementById('q-explanation').classList.remove('hidden');
+        document.getElementById('btn-validate').classList.add('hidden');
+        document.getElementById('btn-next').classList.remove('hidden');
+    }
+
+    // --- NOUVELLE FONCTION JUMP (IFRAME) ---
+    function jumpToPdf(file, page) {
+        // Cache le placeholder
+        document.getElementById('pdf-placeholder').classList.add('hidden');
+        
+        const iframe = document.getElementById('pdf-frame');
+        
+        // Construction de l'URL
+        const newSrc = `${file}#page=${page}&view=FitH`;
+        
+        // Petite vérification pour éviter de recharger si c'est déjà la bonne page (optionnel)
+        // Mais avec les iframes, réassigner le src force souvent la mise à jour correcte
+        iframe.src = newSrc;
+        
+        console.log("Chargement Iframe:", newSrc);
+    }
+    
+    // Fonction accessible globalement pour le bouton "Forcer"
+    window.forceReloadPdf = function() {
+        const q = currentQuiz[currentIdx];
+        const refKey = q.ref;
+        let sourceFile = (refKey && activeQuizData.resources) ? activeQuizData.resources[refKey] : currentPdfPath;
+        jumpToPdf(sourceFile, q.page || 1);
+    };
+
+    function nextQuestion() {
+        currentIdx++;
+        if(currentIdx < currentQuiz.length) loadQuestion();
+        else finishQuiz();
+    }
+
+    function finishQuiz() {
+        document.getElementById('quiz-view').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('final-score-val').innerText = Math.round((score / currentQuiz.length) * 100) + "%";
+    }
+
+    function updateScore() { document.getElementById('score-display').innerText = `${score} / ${currentQuiz.length}`; }
+    function closeQuiz() { document.getElementById('quiz-view').classList.add('hidden'); document.getElementById('end-screen').classList.add('hidden'); document.getElementById('dashboard-view').classList.remove('hidden'); }
+    function restartQuiz() { document.getElementById('end-screen').classList.add('hidden'); startQuiz(activeQuizData.id); }
+</script>
+</body>
+</html>

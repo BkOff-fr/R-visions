@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "category": "Général",
+        "question": "1. Traceability is costing huge amount of money and decision taking of implementation is complex",
+        "options": ["True", "False"],
+        "correct": [0],
+        "explanation": "La traçabilité coûte cher (matériel, logiciel, stockage).",
+        "ref": "cours",
+        "page": 85
+    },
+    {
+        "id": 9,
+        "category": "Général",
+        "question": "9. What is the ultimate goal of industrialization?",
+        "options": ["To satisfy Customers' demand", "To increase Volumes", "To increase Quality", "To reduce Costs"],
+        "correct": [0],
+        "explanation": "La satisfaction client est le but final. Coûts, Qualité et Volumes sont des moyens.",
+        "ref": "cours",
+        "page": 9
+    },
+    {
+        "id": 35,
+        "category": "Electronique",
+        "question": "35. 'SMT' means:",
+        "options": ["Surface Mount Device", "Solid Mount Technology", "Surface Mount Technology", "Simultaneous Multi-Threading"],
+        "correct": [2],
+        "explanation": "Technologie de montage en surface (Surface Mount Technology).",
+        "ref": "cours",
+        "page": 45
+    },
+    {
+        "id": 69,
+        "category": "Environnement",
+        "question": "69. Which standard applies to Environmental Product Declaration?",
+        "options": ["ISO 14027", "ISO 14021", "ISO 14025"],
+        "correct": [2],
+        "explanation": "La norme ISO 14025 régit les déclarations environnementales de type III (EPD).",
+        "ref": "env",
+        "page": 34
+    }
+]
