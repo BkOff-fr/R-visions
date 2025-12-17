@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
-import path from "path";
 import { NextResponse } from "next/server";
+import { getDataPath, validatePathSecurity } from "./utils";
 
 export type ExamManifest = {
   id: string;
@@ -14,9 +14,11 @@ export type ExamManifest = {
   resources?: Record<string, string>;
 };
 
-const manifestPath = path.join(process.cwd(), "data", "manifest.json");
-
 async function readManifest(): Promise<ExamManifest[]> {
+  const manifestPath = getDataPath("manifest.json");
+  const baseDir = getDataPath();
+  validatePathSecurity(manifestPath, baseDir);
+
   const file = await fs.readFile(manifestPath, "utf-8");
   return JSON.parse(file);
 }
@@ -24,7 +26,11 @@ async function readManifest(): Promise<ExamManifest[]> {
 export async function GET() {
   try {
     const manifest = await readManifest();
-    return NextResponse.json(manifest);
+    return NextResponse.json(manifest, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+      },
+    });
   } catch (error) {
     console.error("Failed to load manifest", error);
     return NextResponse.json(
@@ -34,5 +40,5 @@ export async function GET() {
   }
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 

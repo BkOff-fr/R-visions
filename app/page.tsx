@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ExamManifest } from "./api/exams/route";
 
 type Question = {
@@ -38,6 +39,20 @@ function buildPdfSrc(question: Question, exam?: ExamManifest): string {
   return `${base}#page=${page}&view=FitH`;
 }
 
+function ExamCardSkeleton() {
+  return (
+    <div className="animate-pulse rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="mb-4 flex justify-between">
+        <div className="h-6 w-20 rounded bg-slate-200"></div>
+        <div className="h-6 w-12 rounded bg-slate-200"></div>
+      </div>
+      <div className="mb-2 h-6 w-3/4 rounded bg-slate-200"></div>
+      <div className="mb-6 h-4 w-full rounded bg-slate-200"></div>
+      <div className="h-12 w-full rounded-xl bg-slate-200"></div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [manifest, setManifest] = useState<ExamManifest[]>([]);
   const [view, setView] = useState<View>("dashboard");
@@ -51,6 +66,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loadingExam, setLoadingExam] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const activeExam = useMemo(
     () => manifest.find((item) => item.id === activeExamId),
@@ -63,7 +79,7 @@ export default function Home() {
   useEffect(() => {
     const loadManifest = async () => {
       try {
-        const res = await fetch("/api/exams", { cache: "no-store" });
+        const res = await fetch("/api/exams");
         if (!res.ok) throw new Error("Réponse serveur invalide");
         const data = await res.json();
         setManifest(data);
@@ -77,32 +93,66 @@ export default function Home() {
     loadManifest();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
   const startExam = async (examId: string) => {
+    // Cancel previous request if still pending
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setLoadingExam(true);
     setErrorMessage(null);
+
     try {
-      const res = await fetch(`/api/exams/${examId}`, { cache: "no-store" });
+      const res = await fetch(`/api/exams/${examId}`, {
+        signal: controller.signal,
+      });
+
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Erreur serveur");
+        const errorData = await res.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || "Server error");
       }
+
       const data = await res.json();
-      setActiveExamId(data.exam?.id ?? examId);
-      setQuestions(data.questions ?? []);
-      setCurrentIndex(0);
-      setSelected([]);
-      setScore(0);
-      setShowExplanation(false);
-      setPdfSrc("");
-      setCurrentPage(1);
-      setView("quiz");
+
+      // Only update state if this request wasn't cancelled
+      if (!controller.signal.aborted) {
+        setActiveExamId(data.exam?.id ?? examId);
+        setQuestions(data.questions ?? []);
+        setCurrentIndex(0);
+        setSelected([]);
+        setScore(0);
+        setShowExplanation(false);
+        setPdfSrc("");
+        setCurrentPage(1);
+        setView("quiz");
+      }
     } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        // Request was cancelled, ignore
+        return;
+      }
       console.error(error);
       setErrorMessage(
-        "Impossible d'ouvrir l'examen. Vérifiez le fichier JSON et les chemins.",
+        error instanceof Error
+          ? error.message
+          : "Impossible d'ouvrir l'examen. Vérifiez le fichier JSON et les chemins.",
       );
     } finally {
-      setLoadingExam(false);
+      if (!controller.signal.aborted) {
+        setLoadingExam(false);
+      }
+      abortControllerRef.current = null;
     }
   };
 
@@ -182,7 +232,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
-                <i className="fas fa-graduation-cap text-xl" />
+                <FontAwesomeIcon icon="graduation-cap" className="text-xl" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-900">
@@ -226,32 +276,42 @@ export default function Home() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {manifest.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col h-full"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <span className="bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-bold px-2 py-1 rounded-md uppercase">
-                    {item.subject}
-                  </span>
-                  <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
-                    {item.year}
-                  </span>
-                </div>
-                <h3 className="font-bold text-lg text-slate-800 mb-2 leading-tight">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-slate-600 flex-1">{item.description}</p>
-                <button
-                  onClick={() => startExam(item.id)}
-                  className="w-full bg-slate-900 text-white font-bold text-sm py-3 rounded-xl hover:bg-blue-600 transition mt-6 disabled:opacity-50"
-                  disabled={loadingExam}
+            {manifest.length === 0 && !errorMessage ? (
+              <>
+                <ExamCardSkeleton />
+                <ExamCardSkeleton />
+                <ExamCardSkeleton />
+              </>
+            ) : (
+              manifest.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col h-full"
                 >
-                  {loadingExam ? "Ouverture..." : "Lancer"}
-                </button>
-              </div>
-            ))}
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-bold px-2 py-1 rounded-md uppercase">
+                      {item.subject}
+                    </span>
+                    <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                      {item.year}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-lg text-slate-800 mb-2 leading-tight">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 flex-1">
+                    {item.description}
+                  </p>
+                  <button
+                    onClick={() => startExam(item.id)}
+                    className="w-full bg-slate-900 text-white font-bold text-sm py-3 rounded-xl hover:bg-blue-600 transition mt-6 disabled:opacity-50"
+                    disabled={loadingExam}
+                  >
+                    {loadingExam ? "Ouverture..." : "Lancer"}
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         </main>
       </div>
@@ -269,7 +329,7 @@ export default function Home() {
               onClick={closeQuiz}
               className="text-slate-500 hover:text-slate-800 font-medium text-sm flex items-center gap-2"
             >
-              <i className="fas fa-arrow-left" /> Menu
+              <FontAwesomeIcon icon="arrow-left" /> Menu
             </button>
             <div className="text-xs font-bold uppercase tracking-wider text-blue-600">
               {activeExam?.title ?? "Module"}
@@ -330,10 +390,16 @@ export default function Home() {
                           {opt}
                         </span>
                         {isCorrect && (
-                          <i className="fas fa-check text-green-600 ml-auto" />
+                          <FontAwesomeIcon
+                            icon="check"
+                            className="text-green-600 ml-auto"
+                          />
                         )}
                         {isWrong && (
-                          <i className="fas fa-times text-red-500 ml-auto" />
+                          <FontAwesomeIcon
+                            icon="times"
+                            className="text-red-500 ml-auto"
+                          />
                         )}
                       </div>
                     );
@@ -347,7 +413,10 @@ export default function Home() {
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <i className="fas fa-check-circle text-emerald-600 mt-1" />
+                    <FontAwesomeIcon
+                      icon="check-circle"
+                      className="text-emerald-600 mt-1"
+                    />
                     <div className="text-sm w-full">
                       <span className="font-bold text-emerald-800 block mb-1">
                         Explication
@@ -362,8 +431,8 @@ export default function Home() {
                           rel="noreferrer"
                           className="bg-white text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-100 transition inline-flex items-center gap-2"
                         >
-                          <i className="fas fa-sync-alt" /> Ouvrir le PDF (page{" "}
-                          {currentPage})
+                          <FontAwesomeIcon icon="sync-alt" /> Ouvrir le PDF
+                          (page {currentPage})
                         </a>
                       )}
                     </div>
@@ -393,7 +462,8 @@ export default function Home() {
                 showExplanation ? "block" : "hidden",
               )}
             >
-              Question suivante <i className="fas fa-arrow-right ml-2" />
+              Question suivante{" "}
+              <FontAwesomeIcon icon="arrow-right" className="ml-2" />
             </button>
           </div>
         </div>
@@ -401,7 +471,7 @@ export default function Home() {
         <div className="hidden md:flex flex-1 bg-slate-800 flex-col h-full relative">
           <div className="h-10 bg-slate-900 flex items-center justify-between px-4 text-slate-400 text-xs border-b border-slate-700">
             <span className="flex items-center gap-2">
-              <i className="fas fa-file-pdf" />
+              <FontAwesomeIcon icon="file-pdf" />
               {pdfSrc ? pdfSrc.split("#")[0].split("/").pop() : "Support de cours"}
             </span>
             {pdfSrc && (
@@ -427,7 +497,7 @@ export default function Home() {
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 text-slate-400 z-10">
                 <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4">
-                  <i className="fas fa-book-open text-2xl" />
+                  <FontAwesomeIcon icon="book-open" className="text-2xl" />
                 </div>
                 <p className="font-medium text-slate-600">
                   Le cours s&apos;affichera ici

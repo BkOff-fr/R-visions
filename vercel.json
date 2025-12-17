@@ -1,0 +1,19 @@
+{
+  "buildCommand": "npm run build",
+  "framework": "nextjs",
+  "regions": ["cdg1"],
+  "env": {
+    "DATA_DIR": "./data"
+  },
+  "headers": [
+    {
+      "source": "/pdfs/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
