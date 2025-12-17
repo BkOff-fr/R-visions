@@ -1,0 +1,16 @@
+[
+    {
+        "id": "indus_2024_ds",
+        "subject": "Industrialisation",
+        "code": "EC07",
+        "type": "DS",
+        "year": 2024,
+        "title": "Examen Final 2024",
+        "description": "Traçabilité, PCBA, Coûts, Stratégie et Environnement.",
+        "file": "data/indus_ds_2024.json",
+        "resources": {
+            "cours": "/pdfs/EC07-Cours.pdf",
+            "env": "/pdfs/EC07-Env.pdf"
+        }
+    }
+]
