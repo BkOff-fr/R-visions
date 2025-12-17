@@ -1,0 +1,227 @@
+[
+    {
+        "id": 1,
+        "category": "Sécurité",
+        "question": "Quelle est la hiérarchie des mesures de prévention selon les principes généraux ?",
+        "options": [
+            "Élimination > Substitution > Protection collective > Protection individuelle",
+            "Protection individuelle > Protection collective > Substitution > Élimination",
+            "Substitution > Élimination > Protection individuelle > Protection collective",
+            "Protection collective > Élimination > Substitution > Protection individuelle"
+        ],
+        "correct": [0],
+        "explanation": "La hiérarchie des mesures de prévention suit l'ordre : Élimination du danger, Substitution par quelque chose de moins dangereux, Protection collective, puis Protection individuelle en dernier recours.",
+        "ref": "cours",
+        "page": 12
+    },
+    {
+        "id": 2,
+        "category": "Analyse des risques",
+        "question": "Qu'est-ce que la méthode AMDEC (Analyse des Modes de Défaillance, de leurs Effets et de leur Criticité) ?",
+        "options": [
+            "Une méthode d'analyse prévisionnelle des défaillances potentielles",
+            "Une méthode de contrôle qualité a posteriori",
+            "Un outil de gestion de projet uniquement",
+            "Une technique de maintenance corrective"
+        ],
+        "correct": [0],
+        "explanation": "L'AMDEC est une méthode d'analyse prévisionnelle permettant d'identifier les modes de défaillance potentiels, leurs effets et leur criticité avant qu'ils ne surviennent.",
+        "ref": "cours",
+        "page": 25
+    },
+    {
+        "id": 3,
+        "category": "Planning",
+        "question": "Quel outil permet de visualiser les dépendances entre tâches et le chemin critique d'un projet ?",
+        "options": [
+            "Diagramme de Gantt",
+            "PERT (Program Evaluation and Review Technique)",
+            "Matrice RACI",
+            "Kanban"
+        ],
+        "correct": [1],
+        "explanation": "Le PERT permet de visualiser les dépendances entre tâches et d'identifier le chemin critique. Le Gantt montre le planning mais pas nécessairement les dépendances critiques.",
+        "ref": "cours",
+        "page": 35
+    },
+    {
+        "id": 4,
+        "category": "Normes",
+        "question": "Que signifie l'acronyme EPI dans le contexte de la sécurité au travail ?",
+        "options": [
+            "Équipement de Protection Individuelle",
+            "Espace Protégé Industriel",
+            "Évaluation des Processus Internes",
+            "Équipe de Prévention des Incidents"
+        ],
+        "correct": [0],
+        "explanation": "EPI signifie Équipement de Protection Individuelle (casque, gants, lunettes, etc.). C'est la dernière barrière de protection après les mesures collectives.",
+        "ref": "cours",
+        "page": 18
+    },
+    {
+        "id": 5,
+        "category": "Analyse des risques",
+        "question": "Comment calcule-t-on la criticité d'un risque dans une analyse des risques ?",
+        "options": [
+            "Criticité = Gravité × Probabilité",
+            "Criticité = Gravité + Probabilité",
+            "Criticité = Gravité ÷ Probabilité",
+            "Criticité = Gravité - Probabilité"
+        ],
+        "correct": [0],
+        "explanation": "La criticité d'un risque se calcule en multipliant sa gravité par sa probabilité d'occurrence. Cela permet de prioriser les actions de prévention.",
+        "ref": "cours",
+        "page": 28
+    },
+    {
+        "id": 6,
+        "category": "Planning",
+        "question": "Qu'est-ce que la marge totale d'une tâche dans un planning de projet ?",
+        "options": [
+            "Le retard maximum possible sans décaler la fin du projet",
+            "La durée minimale de la tâche",
+            "Le coût total de la tâche",
+            "Le nombre de ressources affectées à la tâche"
+        ],
+        "correct": [0],
+        "explanation": "La marge totale est le retard maximum qu'une tâche peut prendre sans impacter la date de fin du projet. Les tâches sur le chemin critique ont une marge nulle.",
+        "ref": "cours",
+        "page": 38
+    },
+    {
+        "id": 7,
+        "category": "Sécurité",
+        "question": "Quel est le rôle principal du CHSCT (Comité d'Hygiène, de Sécurité et des Conditions de Travail) ?",
+        "options": [
+            "Contribuer à la protection de la santé et sécurité des travailleurs",
+            "Gérer uniquement les accidents du travail",
+            "Organiser les formations techniques",
+            "Superviser la production"
+        ],
+        "correct": [0],
+        "explanation": "Le CHSCT (aujourd'hui CSE) contribue à la protection de la santé physique et mentale, et à la sécurité des travailleurs, ainsi qu'à l'amélioration des conditions de travail.",
+        "ref": "cours",
+        "page": 8
+    },
+    {
+        "id": 8,
+        "category": "Normes",
+        "question": "Quelle norme concerne le management de la santé et sécurité au travail ?",
+        "options": [
+            "ISO 9001",
+            "ISO 14001",
+            "ISO 45001",
+            "ISO 27001"
+        ],
+        "correct": [2],
+        "explanation": "L'ISO 45001 est la norme internationale pour les systèmes de management de la santé et sécurité au travail. ISO 9001 concerne la qualité, ISO 14001 l'environnement, et ISO 27001 la sécurité de l'information.",
+        "ref": "cours",
+        "page": 42
+    },
+    {
+        "id": 9,
+        "category": "Analyse des risques",
+        "question": "Dans une matrice de criticité, quelle zone représente les risques prioritaires nécessitant une action immédiate ?",
+        "options": [
+            "Zone rouge (Gravité élevée × Probabilité élevée)",
+            "Zone verte (Gravité faible × Probabilité faible)",
+            "Zone jaune (Gravité moyenne × Probabilité moyenne)",
+            "Toutes les zones nécessitent la même attention"
+        ],
+        "correct": [0],
+        "explanation": "La zone rouge (criticité élevée) combine gravité et probabilité élevées et nécessite une action immédiate pour réduire le risque. Les risques en zone verte sont acceptables.",
+        "ref": "cours",
+        "page": 30
+    },
+    {
+        "id": 10,
+        "category": "Planning",
+        "question": "Qu'est-ce que le lissage des ressources dans la gestion de projet ?",
+        "options": [
+            "Optimiser l'utilisation des ressources sans modifier la durée du projet",
+            "Réduire le nombre de ressources sur le projet",
+            "Augmenter la durée du projet",
+            "Supprimer les tâches non critiques"
+        ],
+        "correct": [0],
+        "explanation": "Le lissage des ressources vise à optimiser leur utilisation en ajustant les tâches non critiques (utilisant leur marge) sans modifier la durée totale du projet.",
+        "ref": "cours",
+        "page": 40
+    },
+    {
+        "id": 11,
+        "category": "Sécurité",
+        "question": "Quelle est la différence entre un danger et un risque ?",
+        "options": [
+            "Le danger est la source potentielle de dommage, le risque est la probabilité que ce dommage survienne",
+            "Le danger et le risque sont synonymes",
+            "Le risque est plus grave que le danger",
+            "Le danger concerne uniquement les machines"
+        ],
+        "correct": [0],
+        "explanation": "Un danger est une propriété intrinsèque (ex: produit chimique toxique). Un risque est la probabilité et la gravité du dommage en situation d'exposition à ce danger.",
+        "ref": "cours",
+        "page": 15
+    },
+    {
+        "id": 12,
+        "category": "Planning",
+        "question": "Dans la méthode des antécédents (PERT), comment identifie-t-on le chemin critique ?",
+        "options": [
+            "C'est le chemin le plus long en termes de durée",
+            "C'est le chemin avec le plus de tâches",
+            "C'est le chemin le plus coûteux",
+            "C'est le chemin avec le plus de ressources"
+        ],
+        "correct": [0],
+        "explanation": "Le chemin critique est la séquence de tâches la plus longue en durée, déterminant la durée minimale du projet. Tout retard sur ce chemin retarde le projet.",
+        "ref": "cours",
+        "page": 36
+    },
+    {
+        "id": 13,
+        "category": "Analyse des risques",
+        "question": "Qu'est-ce qu'un risque résiduel ?",
+        "options": [
+            "Le risque qui subsiste après la mise en place des mesures de prévention",
+            "Le risque initial avant toute mesure",
+            "Le risque le moins grave",
+            "Le risque le plus probable"
+        ],
+        "correct": [0],
+        "explanation": "Le risque résiduel est le risque qui reste après application des mesures de prévention et de protection. Il doit être aussi bas que raisonnablement possible (principe ALARP).",
+        "ref": "cours",
+        "page": 32
+    },
+    {
+        "id": 14,
+        "category": "Sécurité",
+        "question": "Que signifie le principe ALARP en gestion des risques ?",
+        "options": [
+            "As Low As Reasonably Practicable (Aussi bas que raisonnablement possible)",
+            "Always Lead And Reduce Problems",
+            "Analyze, List, Act, Review, Prevent",
+            "Automatic Level of Risk Prevention"
+        ],
+        "correct": [0],
+        "explanation": "ALARP signifie 'As Low As Reasonably Practicable' - le risque doit être réduit au niveau le plus bas possible compte tenu des contraintes techniques et économiques raisonnables.",
+        "ref": "cours",
+        "page": 20
+    },
+    {
+        "id": 15,
+        "category": "Planning",
+        "question": "Quelle est la différence entre la planification et l'ordonnancement ?",
+        "options": [
+            "La planification définit les tâches et leur séquence, l'ordonnancement alloue les ressources et fixe les dates",
+            "La planification et l'ordonnancement sont identiques",
+            "L'ordonnancement vient avant la planification",
+            "La planification concerne uniquement les coûts"
+        ],
+        "correct": [0],
+        "explanation": "La planification détermine quoi faire et dans quel ordre (séquençage). L'ordonnancement prend en compte les contraintes de ressources pour fixer quand faire chaque tâche.",
+        "ref": "cours",
+        "page": 33
+    }
+]

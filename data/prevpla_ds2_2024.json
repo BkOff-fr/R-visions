@@ -1,0 +1,227 @@
+[
+    {
+        "id": 1,
+        "category": "Document Unique",
+        "question": "Qu'est-ce que le Document Unique d'Évaluation des Risques Professionnels (DUERP) ?",
+        "options": [
+            "Un document obligatoire listant tous les risques identifiés et les actions de prévention",
+            "Un contrat de travail spécifique",
+            "Un registre des accidents du travail uniquement",
+            "Un manuel d'utilisation des machines"
+        ],
+        "correct": [0],
+        "explanation": "Le DUERP est obligatoire dans toute entreprise. Il recense tous les risques professionnels auxquels sont exposés les salariés et les actions de prévention mises en place.",
+        "ref": "cours",
+        "page": 22
+    },
+    {
+        "id": 2,
+        "category": "Planning",
+        "question": "Qu'est-ce qu'un jalon (milestone) dans un projet ?",
+        "options": [
+            "Un événement clé marquant une étape importante du projet, de durée nulle",
+            "Une tâche de longue durée",
+            "Une ressource critique",
+            "Un coût fixe"
+        ],
+        "correct": [0],
+        "explanation": "Un jalon est un événement clé sans durée (exemple : validation d'une phase, livraison). Il sert de point de contrôle pour suivre l'avancement du projet.",
+        "ref": "cours",
+        "page": 37
+    },
+    {
+        "id": 3,
+        "category": "Sécurité",
+        "question": "Quelle est la différence entre prévention primaire, secondaire et tertiaire ?",
+        "options": [
+            "Primaire = éviter le risque, Secondaire = le détecter précocement, Tertiaire = en limiter les conséquences",
+            "Primaire = gérer les accidents, Secondaire = former, Tertiaire = contrôler",
+            "Elles sont identiques",
+            "Primaire = protection collective uniquement"
+        ],
+        "correct": [0],
+        "explanation": "Prévention primaire : éviter l'apparition du risque. Secondaire : détecter précocement (surveillance médicale). Tertiaire : limiter les conséquences une fois le dommage survenu (réadaptation).",
+        "ref": "cours",
+        "page": 16
+    },
+    {
+        "id": 4,
+        "category": "Analyse des risques",
+        "question": "Dans une analyse HAZOP, que signifie le mot-guide 'PLUS' ?",
+        "options": [
+            "Une augmentation quantitative du paramètre étudié",
+            "Une diminution du paramètre",
+            "L'inverse du paramètre",
+            "L'absence du paramètre"
+        ],
+        "correct": [0],
+        "explanation": "En HAZOP (Hazard and Operability), le mot-guide 'PLUS' indique une augmentation quantitative (ex: plus de pression, plus de température). 'MOINS' indique une diminution, 'INVERSE' un sens opposé, 'AUCUN' une absence.",
+        "ref": "cours",
+        "page": 27
+    },
+    {
+        "id": 5,
+        "category": "Planning",
+        "question": "Qu'est-ce que la méthode des potentiels Métra (MPM) ?",
+        "options": [
+            "Une méthode de planification où les tâches sont représentées par des nœuds",
+            "Une méthode où les tâches sont sur les flèches",
+            "Une méthode de contrôle qualité",
+            "Une technique de gestion budgétaire"
+        ],
+        "correct": [0],
+        "explanation": "La MPM (Méthode des Potentiels Métra) est une méthode de planification où les tâches sont représentées par des nœuds (et non des flèches comme dans PERT). Elle facilite la représentation de contraintes complexes.",
+        "ref": "cours",
+        "page": 39
+    },
+    {
+        "id": 6,
+        "category": "Normes",
+        "question": "Que représente le pictogramme avec un point d'exclamation (GHS07) sur une étiquette de produit chimique ?",
+        "options": [
+            "Irritant, nocif, sensibilisant cutané, toxicité aiguë (catégorie 4)",
+            "Toxique ou très toxique",
+            "Corrosif",
+            "Explosif"
+        ],
+        "correct": [0],
+        "explanation": "Le pictogramme GHS07 (point d'exclamation) indique des dangers moins graves : irritant, nocif, sensibilisant cutané ou toxicité aiguë catégorie 4. Le crâne indique toxique/très toxique.",
+        "ref": "cours",
+        "page": 45
+    },
+    {
+        "id": 7,
+        "category": "Sécurité",
+        "question": "Qu'est-ce qu'un arbre des causes dans l'analyse d'accident ?",
+        "options": [
+            "Une méthode d'investigation qui remonte les causes de l'accident de manière systématique",
+            "Un organigramme de l'entreprise",
+            "Un planning de projet",
+            "Un diagramme de Gantt spécifique"
+        ],
+        "correct": [0],
+        "explanation": "L'arbre des causes est une méthode d'analyse a posteriori d'un accident. On remonte de l'événement vers ses causes immédiates, puis vers les causes des causes, de manière arborescente.",
+        "ref": "cours",
+        "page": 24
+    },
+    {
+        "id": 8,
+        "category": "Planning",
+        "question": "Qu'est-ce que le nivellement des ressources dans un projet ?",
+        "options": [
+            "Ajuster le planning pour respecter les contraintes de disponibilité des ressources, quitte à allonger le projet",
+            "Réduire le nombre de ressources uniquement",
+            "Augmenter le budget",
+            "Supprimer des tâches"
+        ],
+        "correct": [0],
+        "explanation": "Le nivellement ajuste le planning pour ne pas dépasser les ressources disponibles, même si cela allonge la durée du projet. C'est différent du lissage qui maintient la durée initiale.",
+        "ref": "cours",
+        "page": 41
+    },
+    {
+        "id": 9,
+        "category": "Analyse des risques",
+        "question": "Dans l'analyse AMDEC, que signifie l'IPR (Indice de Priorité de Risque) ?",
+        "options": [
+            "IPR = Gravité × Fréquence × Détectabilité",
+            "IPR = Gravité + Fréquence + Détectabilité",
+            "IPR = Gravité ÷ Fréquence",
+            "IPR = Coût × Probabilité"
+        ],
+        "correct": [0],
+        "explanation": "L'IPR (ou NPR - Number Priority Risk) se calcule en multipliant la Gravité, la Fréquence d'apparition et la Détectabilité (difficulté à détecter). Plus l'IPR est élevé, plus le risque est prioritaire.",
+        "ref": "cours",
+        "page": 26
+    },
+    {
+        "id": 10,
+        "category": "Sécurité",
+        "question": "Quel est l'objectif de la démarche d'amélioration continue PDCA (Plan-Do-Check-Act) en sécurité ?",
+        "options": [
+            "Améliorer en continu le système de management de la sécurité",
+            "Contrôler uniquement les accidents",
+            "Former le personnel une seule fois",
+            "Documenter les procédures sans les réviser"
+        ],
+        "correct": [0],
+        "explanation": "Le PDCA (Roue de Deming) est un cycle d'amélioration continue : Planifier les actions, Faire/Déployer, Vérifier l'efficacité, Agir pour corriger et améliorer. C'est la base des systèmes de management ISO.",
+        "ref": "cours",
+        "page": 10
+    },
+    {
+        "id": 11,
+        "category": "Planning",
+        "question": "Qu'est-ce que la décomposition WBS (Work Breakdown Structure) ?",
+        "options": [
+            "Une décomposition hiérarchique du projet en lots de travaux de plus en plus détaillés",
+            "Un planning de Gantt détaillé",
+            "Une liste des ressources uniquement",
+            "Un budget prévisionnel"
+        ],
+        "correct": [0],
+        "explanation": "Le WBS (Structure de Découpage du Projet) décompose le projet en livrables et lots de travail de manière hiérarchique, du général au détaillé. C'est la base pour créer le planning.",
+        "ref": "cours",
+        "page": 34
+    },
+    {
+        "id": 12,
+        "category": "Normes",
+        "question": "Que signifie le marquage CE sur un équipement ?",
+        "options": [
+            "L'équipement est conforme aux exigences essentielles des directives européennes applicables",
+            "L'équipement est fabriqué en Europe uniquement",
+            "L'équipement a été testé par un organisme français",
+            "L'équipement est garanti 2 ans"
+        ],
+        "correct": [0],
+        "explanation": "Le marquage CE (Conformité Européenne) indique que le fabricant atteste que l'équipement respecte les exigences essentielles de sécurité des directives européennes applicables. C'est obligatoire pour circuler dans l'UE.",
+        "ref": "cours",
+        "page": 48
+    },
+    {
+        "id": 13,
+        "category": "Sécurité",
+        "question": "Qu'est-ce qu'un accident du travail selon la définition légale ?",
+        "options": [
+            "Un accident survenu par le fait ou à l'occasion du travail, quelle qu'en soit la cause",
+            "Uniquement un accident avec arrêt de travail",
+            "Uniquement un accident sur le lieu de travail",
+            "Un accident causé uniquement par une machine"
+        ],
+        "correct": [0],
+        "explanation": "Selon le Code de la Sécurité Sociale, un accident du travail est un accident survenu par le fait ou à l'occasion du travail, quelle qu'en soit la cause. Il bénéficie d'une présomption d'imputabilité.",
+        "ref": "cours",
+        "page": 6
+    },
+    {
+        "id": 14,
+        "category": "Analyse des risques",
+        "question": "Quelle est la différence entre une analyse de risques qualitative et quantitative ?",
+        "options": [
+            "Qualitative : évaluation par niveaux (faible/moyen/élevé), Quantitative : calcul de probabilités et impacts chiffrés",
+            "Elles sont identiques",
+            "Qualitative : uniquement pour la qualité produit",
+            "Quantitative : uniquement pour les coûts"
+        ],
+        "correct": [0],
+        "explanation": "L'analyse qualitative utilise des échelles de niveaux (faible/moyen/fort) pour évaluer rapidement. L'analyse quantitative calcule des probabilités numériques et des impacts chiffrés, plus précise mais plus coûteuse.",
+        "ref": "cours",
+        "page": 29
+    },
+    {
+        "id": 15,
+        "category": "Planning",
+        "question": "Qu'est-ce que la méthode Kanban en gestion de projet ?",
+        "options": [
+            "Une méthode visuelle de gestion des flux basée sur des cartes et colonnes (À faire, En cours, Terminé)",
+            "Un diagramme de Gantt amélioré",
+            "Une méthode de calcul des coûts",
+            "Un outil de planification stratégique uniquement"
+        ],
+        "correct": [0],
+        "explanation": "Kanban est une méthode Agile de gestion visuelle des flux. Les tâches sont représentées par des cartes qui avancent entre colonnes (À faire, En cours, Terminé). Elle limite le travail en cours (WIP) pour optimiser le flux.",
+        "ref": "cours",
+        "page": 44
+    }
+]

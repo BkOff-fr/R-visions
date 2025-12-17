@@ -12,5 +12,31 @@
             "cours": "/pdfs/EC07-Cours.pdf",
             "env": "/pdfs/EC07-Env.pdf"
         }
+    },
+    {
+        "id": "prevpla_2024_ds1",
+        "subject": "PrevPla",
+        "code": "PREVPLA",
+        "type": "DS",
+        "year": 2024,
+        "title": "DS1 - Fondamentaux",
+        "description": "Sécurité, Analyse des risques, Planning et Normes.",
+        "file": "data/prevpla_ds1_2024.json",
+        "resources": {
+            "cours": "/pdfs/PrevPla-Cours.pdf"
+        }
+    },
+    {
+        "id": "prevpla_2024_ds2",
+        "subject": "PrevPla",
+        "code": "PREVPLA",
+        "type": "DS",
+        "year": 2024,
+        "title": "DS2 - Approfondissement",
+        "description": "Document Unique, Planning avancé, AMDEC et Prévention.",
+        "file": "data/prevpla_ds2_2024.json",
+        "resources": {
+            "cours": "/pdfs/PrevPla-Cours.pdf"
+        }
     }
 ]

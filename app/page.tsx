@@ -73,6 +73,19 @@ export default function Home() {
     [activeExamId, manifest],
   );
 
+  // Group exams by subject
+  const groupedExams = useMemo(() => {
+    const groups: Record<string, ExamManifest[]> = {};
+    manifest.forEach((exam) => {
+      const subject = exam.subject || "Autres";
+      if (!groups[subject]) {
+        groups[subject] = [];
+      }
+      groups[subject].push(exam);
+    });
+    return groups;
+  }, [manifest]);
+
   const currentQuestion = questions[currentIndex];
   const isMulti = (currentQuestion?.correct?.length ?? 0) > 1;
 
@@ -228,91 +241,126 @@ export default function Home() {
           "absolute inset-0 z-30 bg-slate-50 flex-col overflow-y-auto",
         )}
       >
-        <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
-                <FontAwesomeIcon icon="graduation-cap" className="text-xl" />
+        <header className="bg-gradient-to-r from-indigo-600 to-blue-600 sticky top-0 z-30 shadow-lg">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-white">
+                <FontAwesomeIcon icon="graduation-cap" className="text-2xl" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900">
+                <h1 className="text-2xl font-bold text-white">
                   Icam Revision Hub
                 </h1>
-                <p className="text-sm text-slate-500">
-                  Next.js + API Vercel pour un déploiement durable
+                <p className="text-sm text-indigo-100">
+                  Plateforme de révision interactive avec synchronisation PDF
                 </p>
               </div>
             </div>
-            <a
-              href="https://vercel.com/new"
-              className="text-sm font-semibold text-blue-700 hover:text-blue-900"
-            >
-              Déployer sur Vercel →
-            </a>
           </div>
         </header>
 
         <main className="max-w-7xl mx-auto px-6 py-10 w-full">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Examens
-              </h2>
-              <p className="text-sm text-slate-500">
-                Les examens sont lus via l&apos;API Next (fichiers /data).
-              </p>
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900">
+                  Mes Révisions
+                </h2>
+                <p className="text-sm text-slate-600 mt-1">
+                  Sélectionnez un examen pour commencer à réviser
+                </p>
+              </div>
+              {loadingExam && (
+                <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-lg">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-solid border-blue-600 border-r-transparent"></div>
+                  <span className="text-sm text-blue-700 font-medium">
+                    Chargement...
+                  </span>
+                </div>
+              )}
             </div>
-            {loadingExam && (
-              <span className="text-xs text-blue-600 font-semibold">
-                Chargement...
-              </span>
-            )}
           </div>
 
           {errorMessage && (
-            <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 shadow-sm">
-              {errorMessage}
+            <div className="mb-8 rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-800 shadow-sm flex items-start gap-3">
+              <svg className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>{errorMessage}</div>
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {manifest.length === 0 && !errorMessage ? (
-              <>
-                <ExamCardSkeleton />
-                <ExamCardSkeleton />
-                <ExamCardSkeleton />
-              </>
-            ) : (
-              manifest.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col h-full"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-bold px-2 py-1 rounded-md uppercase">
-                      {item.subject}
-                    </span>
-                    <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
-                      {item.year}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-800 mb-2 leading-tight">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-slate-600 flex-1">
-                    {item.description}
-                  </p>
-                  <button
-                    onClick={() => startExam(item.id)}
-                    className="w-full bg-slate-900 text-white font-bold text-sm py-3 rounded-xl hover:bg-blue-600 transition mt-6 disabled:opacity-50"
-                    disabled={loadingExam}
-                  >
-                    {loadingExam ? "Ouverture..." : "Lancer"}
-                  </button>
+          {manifest.length === 0 && !errorMessage ? (
+            <div className="space-y-6">
+              <div>
+                <div className="h-8 w-48 bg-slate-200 rounded-lg mb-4 animate-pulse"></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <ExamCardSkeleton />
+                  <ExamCardSkeleton />
+                  <ExamCardSkeleton />
                 </div>
-              ))
-            )}
-          </div>
+              </div>
+            </div>
+          ) : (
+            Object.entries(groupedExams).map(([subject, exams]) => (
+              <div key={subject} className="mb-10">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="h-1 w-12 bg-gradient-to-r from-indigo-600 to-blue-600 rounded-full"></div>
+                  <h3 className="text-xl font-bold text-slate-800">{subject}</h3>
+                  <div className="flex-1 h-px bg-slate-200"></div>
+                  <span className="text-sm text-slate-500 font-medium">
+                    {exams.length} {exams.length > 1 ? "examens" : "examen"}
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {exams.map((item) => (
+                    <div
+                      key={item.id}
+                      className="group bg-white p-6 rounded-2xl border-2 border-slate-200 hover:border-indigo-400 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full relative overflow-hidden"
+                      onClick={() => startExam(item.id)}
+                    >
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 rounded-bl-full transform translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-500"></div>
+
+                      <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="flex items-center gap-2">
+                          <span className="bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-700 text-[10px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide">
+                            {item.type}
+                          </span>
+                          <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1.5 rounded-lg">
+                            {item.year}
+                          </span>
+                        </div>
+                      </div>
+
+                      <h4 className="font-bold text-lg text-slate-900 mb-2 leading-tight group-hover:text-indigo-600 transition-colors relative z-10">
+                        {item.title}
+                      </h4>
+
+                      <p className="text-sm text-slate-600 flex-1 mb-4 relative z-10 line-clamp-2">
+                        {item.description}
+                      </p>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-100 relative z-10">
+                        <span className="text-xs text-slate-500 font-medium">
+                          {item.code}
+                        </span>
+                        <button
+                          className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold text-sm px-6 py-2.5 rounded-lg hover:from-indigo-700 hover:to-blue-700 transition-all duration-200 shadow-lg shadow-indigo-200 group-hover:shadow-xl group-hover:shadow-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={loadingExam}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            startExam(item.id);
+                          }}
+                        >
+                          {loadingExam ? "Ouverture..." : "Réviser"}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
         </main>
       </div>
 
